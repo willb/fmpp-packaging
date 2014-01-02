@@ -1,0 +1,179 @@
+--- build.xml.orig	2013-12-31 13:58:30.911586673 -0600
++++ build.xml	2014-01-02 14:46:49.566312482 -0600
+@@ -12,13 +12,13 @@
+         classname="java.lang.Object" ignoresystemclasses="true" 
+         property="bootclasspath.correct" />
+     
+-    <property name="freemarker.lib" value="lib/freemarker.jar" />
+-    <property name="oro.lib" value="lib/oro.jar" />
+-    <property name="bsh.lib" value="lib/bsh.jar" />
+-    <property name="jaxp.lib" value="lib/forbuild/jaxp.jar" />
+-    <property name="sax.lib" value="lib/forbuild/sax.jar" />
+-    <property name="dom.lib" value="lib/forbuild/dom.jar" />
+-    <property name="resolver.lib" value="lib/resolver.jar" />
++    <property name="freemarker.lib" value="/usr/share/java/freemarker.jar" />
++    <property name="oro.lib" value="/usr/share/java/oro.jar" />
++    <property name="bsh.lib" value="/usr/share/java/bsh.jar" />
++    <property name="jaxp.lib" value="/usr/share/java/jaxp.jar" />
++    <property name="sax.lib" value="/usr/share/java/sax.jar" />
++    <property name="dom.lib" value="/usr/share/java/dom.jar" />
++    <property name="resolver.lib" value="/usr/share/java/xml-resolver.jar" />
+ 
+     <path id="classpath.path">
+         <pathelement path="${freemarker.lib}" />
+@@ -28,9 +28,8 @@
+         <pathelement path="${sax.lib}" />
+         <pathelement path="${dom.lib}" />
+         <pathelement path="${resolver.lib}" />
+-        <pathelement path="lib/fmpp.jar" />
+         <pathelement path="lib/forbuild/classes/" />
+-        <pathelement path="${env.ANT_HOME}/lib/ant.jar" />
++        <pathelement path="/usr/share/java/ant.jar" />
+     </path>
+ 
+     <target name="init">
+@@ -56,7 +55,7 @@
+         <jar basedir="build/compile" jarfile="lib/fmpp.jar">
+             <manifest>
+                 <attribute name="Main-Class" value="fmpp.tools.CommandLine" />
+-                <attribute name="Class-Path" value="oro.jar freemarker.jar bsh.jar resolver.jar" />
++                <attribute name="Class-Path" value="/usr/share/java/oro.jar /usr/share/java/freemarker.jar /usr/share/java/bsh.jar /usr/share/java/xml-resolver.jar" />
+                 <attribute name="Extension-name" value="fmpp" />
+                 <attribute name="Specification-Title" value="FMPP" />
+                 <attribute name="Specification-Version" value="${version}" />
+@@ -207,12 +206,7 @@
+                 <exclude name="README.txt" />
+             </fileset>
+             <fileset dir=".">
+-                <include name="lib/forbuild/**" />
+                 <include name="lib/fmpp.jar" />
+-                <include name="lib/oro.jar" />
+-                <include name="lib/freemarker.jar" />
+-                <include name="lib/bsh.jar" />
+-                <include name="lib/resolver.jar" />
+             </fileset>
+         </copy>
+         <copy file="README.txt" todir="dist/fmpp_${version}" filtering="true" />
+@@ -295,114 +289,8 @@
+             <fileset dir="src/testsuite/projects" includes="*/log.fmpp"/>
+             <!-- Ant doesn't allow it: <fileset dir="lib" includes="fmpp.jar"/> -->
+         </delete>
++
+     </target>
+-
+-    <!--
+-      Uploads the fmpp.jar that is in the current DISTRIBUTION DIRECTORY
+-      into the place that the central Maven2 repository syncs itself with
+-      periodically. Of course it also uploads the Maven-specific metadata files.
+-  
+-      Note: maven-ant-tasks-x.x.x.jar must be added to ${ANT_HOME}/lib for
+-            this to work. Get it here: http://maven.apache.org/download.html
+-    -->
+-    <target name="maven-upload" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+-        <echo file="build/pom.xml"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+-            <project xmlns="http://maven.apache.org/POM/4.0.0"
+-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-              xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+-              <modelVersion>4.0.0</modelVersion>
+-              <groupId>net.sourceforge.fmpp</groupId>
+-              <artifactId>fmpp</artifactId>
+-              <version>${version}</version>
+-              <packaging>jar</packaging>
+-              <name>FMPP</name>
+-              <description>
+-                General-purpose text file preprocessor tool that uses FreeMarker templates.
+-              </description>
+-              <url>http://fmpp.sourceforge.net</url>
+-              <licenses>
+-                <license>
+-                  <name>BSD license</name>
+-                  <url>http://fmpp.sourceforge.net/license.html</url>
+-                </license>
+-              </licenses>
+-              <scm>
+-                <url>http://fmpp.svn.sourceforge.net/viewvc/fmpp/</url>
+-                <connection>scm:svn:https://fmpp.svn.sourceforge.net/svnroot/fmpp</connection>
+-              </scm>
+-              <dependencies>
+-                <dependency>
+-                  <groupId>org.freemarker</groupId>
+-                  <artifactId>freemarker</artifactId>
+-                  <!-- 2.4 will be somewhat non-BC -->
+-                  <version>[2.3.15,2.4)</version>
+-                </dependency>
+-                <dependency>
+-                  <groupId>oro</groupId>
+-                  <artifactId>oro</artifactId>
+-                  <!-- I guess there will not be non-BC changes anymore. -->
+-                  <version>[2.0.8,)</version>
+-                </dependency>
+-                <dependency>
+-                  <groupId>org.beanshell</groupId>
+-                  <artifactId>bsh</artifactId>
+-                  <!-- Regarding 2.1 it's just a wild guess... -->
+-                  <version>[1.3,2.1)</version>
+-                </dependency>
+-                <dependency>
+-                  <groupId>xml-resolver</groupId>
+-                  <artifactId>xml-resolver</artifactId>
+-                  <!-- I guess there will not be non-BC changes anymore. -->
+-                  <version>[1.1,)</version>
+-                </dependency>
+-              </dependencies>
+-            </project>
+-        ]]></echo>
+-   
+-        <jar destfile="build/maven-source-attachment.jar" basedir="src/java"  />
+-   
+-        <artifact:install-provider artifactId="wagon-ssh" version="1.0-beta-2"/>
+-   
+-        <input
+-             validargs="y,n"
+-             addproperty="mavenUpload.answer"
+-        ><!--
+-            -->You are about uploading dist/fmpp_${version}/lib/fmpp.jar <!--
+-            -->into the Maven central repostiry sync. directory. <!--
+-            -->Be sure that's the final (released) variation there, <!--
+-            -->and that the version number is correct. <!--
+-            -->Proceed? <!--
+-        --></input>
+-        <condition property="mavenUpload.yes">
+-            <equals arg1="y" arg2="${mavenUpload.answer}"/>
+-        </condition>
+-        <fail unless="mavenUpload.yes" message="Task aborted by user." />
+-   
+-        <input
+-               message="Enter your SourceForge.net user name: "
+-               addproperty="mavenUpload.user"
+-       />
+-        <input
+-               message="Enter your SourceForge.net password (WILL BE DISPLAYED AS YOU TYPE IT!): "
+-               addproperty="mavenUpload.password"
+-       />
+-   
+-        <artifact:deploy file="dist/fmpp_${version}/lib/fmpp.jar">
+-            <remoteRepository url="sftp://web.sourceforge.net/home/groups/f/fm/fmpp/htdocs/maven2">
+-                <authentication
+-                      username="${mavenUpload.user},fmpp"
+-                      password="${mavenUpload.password}"
+-               />
+-            </remoteRepository>
+-            <pom file="build/pom.xml" />
+-            <attach file="build/maven-source-attachment.jar" classifier="sources" />
+-        </artifact:deploy>
+-        
+-        <echo>**********************************************</echo>
+-        <echo>CLEAR THE SCREEN, NOW! Your password is on it!</echo>
+-        <echo>**********************************************</echo>
+-    </target>
+-
+     <target name="qinstall" depends="init"
+             description='Same as "install", but assumes "y" for all questions.'>
+         <antcall target="_install_jar_doit">
+@@ -510,4 +398,4 @@
+         <echo>*************************************************************</echo>
+     </target>
+ 
+-</project>
+\ No newline at end of file
++</project>
