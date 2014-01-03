@@ -1,5 +1,5 @@
---- build.xml.orig	2013-12-31 13:58:30.911586673 -0600
-+++ build.xml	2014-01-02 14:46:49.566312482 -0600
+--- a/build.xml	2013-12-31 13:58:30.911586673 -0600
++++ b/build.xml	2014-01-02 14:46:49.566312482 -0600
 @@ -12,13 +12,13 @@
          classname="java.lang.Object" ignoresystemclasses="true" 
          property="bootclasspath.correct" />
@@ -14,9 +14,7 @@
 +    <property name="freemarker.lib" value="/usr/share/java/freemarker.jar" />
 +    <property name="oro.lib" value="/usr/share/java/oro.jar" />
 +    <property name="bsh.lib" value="/usr/share/java/bsh.jar" />
-+    <property name="jaxp.lib" value="/usr/share/java/jaxp.jar" />
-+    <property name="sax.lib" value="/usr/share/java/sax.jar" />
-+    <property name="dom.lib" value="/usr/share/java/dom.jar" />
++    <property name="jaxp.lib" value="/usr/share/java/xml-apis.jar" />
 +    <property name="resolver.lib" value="/usr/share/java/xml-resolver.jar" />
  
      <path id="classpath.path">
