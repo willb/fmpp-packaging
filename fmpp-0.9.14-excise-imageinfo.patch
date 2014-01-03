@@ -1,0 +1,60 @@
+--- a/src/java/fmpp/dataloaders/HtmlUtilsDataLoader.java	2014-01-03 12:18:49.887580753 -0600
++++ b/src/java/fmpp/dataloaders/HtmlUtilsDataLoader.java	2014-01-03 12:27:02.527682248 -0600
+@@ -32,7 +32,6 @@
+  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-import imageinfo.ImageInfo;
+ import java.io.File;
+ import java.io.IOException;
+ import java.io.RandomAccessFile;
+@@ -41,6 +40,7 @@
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Map;
++import javax.imageio.ImageIO;
+ 
+ import fmpp.Engine;
+ import fmpp.tdd.DataLoader;
+@@ -68,7 +68,6 @@
+     private Map imageInfoCache = new HashMap();
+     private CachedImageInfo first;
+     private CachedImageInfo last;
+-    private ImageInfo imageInfo = new ImageInfo();
+     
+     public Object load(Engine e, List args) throws Exception {
+         if (args.size() != 0) {
+@@ -134,21 +133,21 @@
+             }
+         }
+         
+-        RandomAccessFile raf = new RandomAccessFile(f, "r");
++	int width = 0;
++	int height = 0;
++
+         try {
+-            imageInfo.setCollectComments(false);
+-            imageInfo.setInput(raf);
+-            if (!imageInfo.check()) {
+-                throw new TemplateModelException(
+-                        "Failed to analyse image file: " + cacheKey);
+-            }
+-        } finally {
+-            raf.close();
+-        }
++	    java.awt.image.BufferedImage img = ImageIO.read(f);
++	    width = img.getWidth();
++	    height = img.getHeight();
++	} catch(Exception e) {
++            throw new TemplateModelException("Failed to analyse image file: " + cacheKey);
++	} 
++
+         inf = new CachedImageInfo();
+         inf.lmd = f.lastModified();
+-        inf.width = imageInfo.getWidth();
+-        inf.height = imageInfo.getHeight();
++        inf.width = width;
++        inf.height = height;
+         inf.path = cacheKey;
+         if (last != null) {
+             last.next = inf;
