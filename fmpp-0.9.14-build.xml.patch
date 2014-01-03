@@ -1,6 +1,5 @@
-diff -u a/build.xml b/build.xml
 --- a/build.xml	2014-01-03 11:30:51.394013853 -0600
-+++ b/build.xml	2014-01-03 11:39:02.437189011 -0600
++++ b/build.xml	2014-01-03 13:10:46.885919113 -0600
 @@ -12,25 +12,20 @@
          classname="java.lang.Object" ignoresystemclasses="true" 
          property="bootclasspath.correct" />
@@ -63,7 +62,17 @@ diff -u a/build.xml b/build.xml
          />
      </target>
  
-@@ -207,12 +204,7 @@
+@@ -177,7 +174,8 @@
+            we (re)build fmpp.jar in this VM, and also because this task should work
+            without installing FMPP for Ant.
+         -->
+-        <java fork="true" jar="${basedir}/lib/fmpp.jar" failonerror="true">
++        <java fork="true" classname="fmpp.tools.CommandLine" classpath="${basedir}/lib/fmpp.jar" failonerror="true"> 
++	    <classpath refid="classpath.path" />
+             <sysproperty key="fmpp.home" value="${basedir}" />
+             <arg value="-C${basedir}/fmppgdoc.fmpp" />
+             <arg value='-D online:${online}' />
+@@ -207,12 +205,7 @@
                  <exclude name="README.txt" />
              </fileset>
              <fileset dir=".">
@@ -76,7 +85,25 @@ diff -u a/build.xml b/build.xml
              </fileset>
          </copy>
          <copy file="README.txt" todir="dist/fmpp_${version}" filtering="true" />
-@@ -297,15 +289,7 @@
+@@ -267,10 +260,14 @@
+                 destdir="build/testsuite/compile"
+                 deprecation="on"
+                 debug="on"
+-                source="1.2"
+-                target="1.2"
++                source="1.5"
++                target="1.5"
+         >
+-            <classpath refid="classpath.path" />
++            <classpath> 
++	      <path refid="classpath.path" />
++	      <pathelement path="lib/fmpp.jar" />
++	    </classpath>
++
+         </javac>
+         <property name="fmpp.testcase" value="" />
+         <java fork="true"
+@@ -297,15 +294,7 @@
          </delete>
      </target>
  
@@ -93,7 +120,7 @@ diff -u a/build.xml b/build.xml
          <echo file="build/pom.xml"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
              <project xmlns="http://maven.apache.org/POM/4.0.0"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-@@ -358,49 +342,6 @@
+@@ -358,49 +347,6 @@
                </dependencies>
              </project>
          ]]></echo>
@@ -143,11 +170,10 @@ diff -u a/build.xml b/build.xml
      </target>
  
      <target name="qinstall" depends="init"
-@@ -510,4 +451,4 @@
+@@ -510,4 +456,4 @@
          <echo>*************************************************************</echo>
      </target>
  
 -</project>
 \ No newline at end of file
 +</project>
-Only in b: build.xml~

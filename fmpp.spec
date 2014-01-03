@@ -10,8 +10,9 @@ URL:            http://fmpp.sourceforge.net
 Source0:        http://prdownloads.sourceforge.net/fmpp/fmpp_%{version}.tar.gz
 Source1:	http://repo1.maven.org/maven2/net/sourceforge/fmpp/fmpp/%{fmpp_version}/fmpp-%{fmpp_version}.pom
 Patch0:		fmpp-0.9.14-build.xml.patch
+Patch1:		fmpp-0.9.14-excise-imageinfo.patch
 
-BuildRequires:  jpackage-utils
+BuildRequires:  javapackages-tools
 BuildRequires:	java-devel
 
 BuildRequires:	ant
@@ -22,8 +23,8 @@ BuildRequires:  mvn(org.beanshell:bsh)
 BuildRequires:  mvn(xml-resolver:xml-resolver)
 BuildRequires:  mvn(xml-apis:xml-apis) 
 
-Requires:	jpackage-utils
-Requires:	java-devel
+Requires:	javapackages-tools
+Requires:	java
 
 Requires:  mvn(oro:oro)
 Requires:  mvn(org.freemarker:freemarker)
@@ -70,10 +71,15 @@ pushd lib/forbuild/classes/imageinfo
 javac ImageInfo.java
 popd
 
-ant compile jar docs
+ant build
+
+ant make-pom
+
+%check
+
+ant test
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_javadir}
 mkdir -p %{buildroot}/%{_mavenpomdir}
 mkdir -p %{buildroot}/%{_javadocdir}/%{name}
