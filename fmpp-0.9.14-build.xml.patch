@@ -1,6 +1,6 @@
 --- a/build.xml	2014-01-03 11:30:51.394013853 -0600
-+++ b/build.xml	2014-01-03 13:14:52.916346246 -0600
-@@ -12,25 +12,20 @@
++++ b/build.xml	2014-01-03 16:40:50.443984812 -0600
+@@ -12,25 +12,19 @@
          classname="java.lang.Object" ignoresystemclasses="true" 
          property="bootclasspath.correct" />
      
@@ -27,13 +27,13 @@
 +        <pathelement path="${xmlapis.lib}" />
          <pathelement path="${resolver.lib}" />
 -        <pathelement path="lib/fmpp.jar" />
-         <pathelement path="lib/forbuild/classes/" />
+-        <pathelement path="lib/forbuild/classes/" />
 -        <pathelement path="${env.ANT_HOME}/lib/ant.jar" />
 +        <pathelement path="/usr/share/java/ant.jar" />
      </path>
  
      <target name="init">
-@@ -56,7 +51,6 @@
+@@ -56,7 +50,6 @@
          <jar basedir="build/compile" jarfile="lib/fmpp.jar">
              <manifest>
                  <attribute name="Main-Class" value="fmpp.tools.CommandLine" />
@@ -41,7 +41,7 @@
                  <attribute name="Extension-name" value="fmpp" />
                  <attribute name="Specification-Title" value="FMPP" />
                  <attribute name="Specification-Version" value="${version}" />
-@@ -84,8 +78,9 @@
+@@ -84,16 +77,17 @@
                  destdir="build/compile"
                  deprecation="off"
                  debug="on"
@@ -53,7 +53,17 @@
          >
              <classpath refid="classpath.path" />
          </javac>
-@@ -159,6 +154,8 @@
+-        <copy todir="build/compile">
++<!--        <copy todir="build/compile">
+             <fileset dir="lib/forbuild/classes">
+                 <exclude name="**/*.java*" />
+             </fileset>
+-        </copy>
++        </copy> -->
+         <copy
+             file="src/java/fmpp/version.properties" todir="build/compile/fmpp"
+             overwrite="true"
+@@ -159,6 +153,8 @@
                  classpathref="classpath.path"
                  version="false"
                  author="false"
@@ -62,7 +72,7 @@
          />
      </target>
  
-@@ -177,7 +174,8 @@
+@@ -177,7 +173,8 @@
             we (re)build fmpp.jar in this VM, and also because this task should work
             without installing FMPP for Ant.
          -->
@@ -72,7 +82,7 @@
              <sysproperty key="fmpp.home" value="${basedir}" />
              <arg value="-C${basedir}/fmppgdoc.fmpp" />
              <arg value='-D online:${online}' />
-@@ -207,12 +205,7 @@
+@@ -207,12 +204,7 @@
                  <exclude name="README.txt" />
              </fileset>
              <fileset dir=".">
@@ -85,7 +95,7 @@
              </fileset>
          </copy>
          <copy file="README.txt" todir="dist/fmpp_${version}" filtering="true" />
-@@ -267,16 +260,23 @@
+@@ -267,16 +259,23 @@
                  destdir="build/testsuite/compile"
                  deprecation="on"
                  debug="on"
@@ -115,7 +125,7 @@
              <arg value="${basedir}" />
              <arg value="${fmpp.testcase}" />
          </java>
-@@ -297,15 +297,7 @@
+@@ -297,15 +296,7 @@
          </delete>
      </target>
  
@@ -132,7 +142,7 @@
          <echo file="build/pom.xml"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
              <project xmlns="http://maven.apache.org/POM/4.0.0"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-@@ -358,49 +350,6 @@
+@@ -358,49 +349,6 @@
                </dependencies>
              </project>
          ]]></echo>
@@ -182,7 +192,7 @@
      </target>
  
      <target name="qinstall" depends="init"
-@@ -510,4 +459,4 @@
+@@ -510,4 +458,4 @@
          <echo>*************************************************************</echo>
      </target>
  

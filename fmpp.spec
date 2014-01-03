@@ -1,36 +1,36 @@
 %global fmpp_version 0.9.14
 
-Name:           fmpp
-Version:        %{fmpp_version}
-Release:        1%{?dist}
-Summary:        FreeMarker-based text file PreProcessor 
+Name:		fmpp
+Version:	%{fmpp_version}
+Release:	1%{?dist}
+Summary:	FreeMarker-based text file PreProcessor 
 
-License:        BSD
-URL:            http://fmpp.sourceforge.net
-Source0:        http://prdownloads.sourceforge.net/fmpp/fmpp_%{version}.tar.gz
+License:	BSD
+URL:		http://fmpp.sourceforge.net
+Source0:	http://prdownloads.sourceforge.net/fmpp/fmpp_%{version}.tar.gz
 
 Patch0:		fmpp-0.9.14-build.xml.patch
 Patch1:		fmpp-0.9.14-excise-imageinfo.patch
 
-BuildRequires:  javapackages-tools
+BuildRequires:	javapackages-tools
 BuildRequires:	java-devel
 
 BuildRequires:	ant
 
-BuildRequires:  mvn(oro:oro)
-BuildRequires:  mvn(org.freemarker:freemarker)
-BuildRequires:  mvn(org.beanshell:bsh)
-BuildRequires:  mvn(xml-resolver:xml-resolver)
-BuildRequires:  mvn(xml-apis:xml-apis) 
+BuildRequires:	mvn(oro:oro)
+BuildRequires:	mvn(org.freemarker:freemarker)
+BuildRequires:	mvn(org.beanshell:bsh)
+BuildRequires:	mvn(xml-resolver:xml-resolver)
+BuildRequires:	mvn(xml-apis:xml-apis) 
 
 Requires:	javapackages-tools
 Requires:	java
 
-Requires:  mvn(oro:oro)
-Requires:  mvn(org.freemarker:freemarker)
-Requires:  mvn(org.beanshell:bsh)
-Requires:  mvn(xml-resolver:xml-resolver)
-Requires:  mvn(xml-apis:xml-apis) 
+Requires:	mvn(oro:oro)
+Requires:	mvn(org.freemarker:freemarker)
+Requires:	mvn(org.beanshell:bsh)
+Requires:	mvn(xml-resolver:xml-resolver)
+Requires:	mvn(xml-apis:xml-apis) 
 
 BuildArch:	noarch
 
@@ -46,9 +46,9 @@ extendable with Java classes to pull data from any data sources
 (database, etc.) and embed the data into the generated files.
 
 %package javadoc
-Group:          Documentation
-Summary:        Javadoc for %{name}
-BuildArch:      noarch
+Group:		Documentation
+Summary:	Javadoc for %{name}
+BuildArch:	noarch
 
 %description javadoc
 Javadoc for %{name}.
@@ -61,19 +61,27 @@ Javadoc for %{name}.
 
 find lib -name \*.jar -delete
 
-pushd lib/forbuild/classes/imageinfo 
-rm *.class 
-cp Imageinfo.java.dontcheck ImageInfo.java
-popd
+rm -rf lib/forbuild/classes
 
 # these two tests don't pass for some reason
 find . -name always_create_dirs_\* -and -type d | xargs rm -rf
 
-%build
+# strip carriage returns
+find . -name \*.fmpp -or\
+ -name package-list -or\
+ -name \*.bsh -or\
+ -name \*.txt -or\
+ -name \*.xml -or\
+ -name \*.c -or \
+ -name \*.css -or \
+ -name \*.csv -or \
+ -name \*.dtd -or \
+ -name \*.ent -or \
+ -name \*.ftl -or \
+ -name \*.html -or \
+ -name \*.tdd| xargs sed -i 's/\r$//'
 
-pushd lib/forbuild/classes/imageinfo
-javac ImageInfo.java
-popd
+%build
 
 ant build
 
@@ -91,6 +99,8 @@ mkdir -p %{buildroot}/%{_javadocdir}/%{name}
 cp lib/fmpp.jar %{buildroot}/%{_javadir}
 cp build/pom.xml %{buildroot}/%{_mavenpomdir}/JPP-fmpp.pom
 cp -rp docs/* %{buildroot}/%{_javadocdir}/%{name}
+
+find %{buildroot} -size 0 -delete
 
 %add_maven_depmap JPP-%{name}.pom %{name}.jar
 
