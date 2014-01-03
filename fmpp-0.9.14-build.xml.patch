@@ -1,5 +1,5 @@
 --- a/build.xml	2014-01-03 11:30:51.394013853 -0600
-+++ b/build.xml	2014-01-03 13:10:46.885919113 -0600
++++ b/build.xml	2014-01-03 13:14:52.916346246 -0600
 @@ -12,25 +12,20 @@
          classname="java.lang.Object" ignoresystemclasses="true" 
          property="bootclasspath.correct" />
@@ -85,7 +85,7 @@
              </fileset>
          </copy>
          <copy file="README.txt" todir="dist/fmpp_${version}" filtering="true" />
-@@ -267,10 +260,14 @@
+@@ -267,16 +260,23 @@
                  destdir="build/testsuite/compile"
                  deprecation="on"
                  debug="on"
@@ -103,7 +103,19 @@
          </javac>
          <property name="fmpp.testcase" value="" />
          <java fork="true"
-@@ -297,15 +294,7 @@
+-                classname="fmpp.testsuite.TestSuite"
+-                classpath="lib/fmpp.jar;${xpathSupport.lib};build/testsuite/compile"
+-        >
++                classname="fmpp.testsuite.TestSuite">
++            <classpath>
++	      <path refid="classpath.path" />
++	      <pathelement path="lib/fmpp.jar;${xpathSupport.lib};build/testsuite/compile"/>
++	    </classpath>
++       
+             <arg value="${basedir}" />
+             <arg value="${fmpp.testcase}" />
+         </java>
+@@ -297,15 +297,7 @@
          </delete>
      </target>
  
@@ -120,7 +132,7 @@
          <echo file="build/pom.xml"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
              <project xmlns="http://maven.apache.org/POM/4.0.0"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-@@ -358,49 +347,6 @@
+@@ -358,49 +350,6 @@
                </dependencies>
              </project>
          ]]></echo>
@@ -170,7 +182,7 @@
      </target>
  
      <target name="qinstall" depends="init"
-@@ -510,4 +456,4 @@
+@@ -510,4 +459,4 @@
          <echo>*************************************************************</echo>
      </target>
  
