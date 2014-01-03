@@ -18,7 +18,7 @@ BuildRequires:	ant
 
 BuildRequires:  mvn(oro:oro)
 BuildRequires:  mvn(org.freemarker:freemarker)
-BuildRequires:  mvn(bsh:bsh)
+BuildRequires:  mvn(org.beanshell:bsh)
 BuildRequires:  mvn(xml-resolver:xml-resolver)
 BuildRequires:  mvn(xml-apis:xml-apis) 
 
@@ -27,7 +27,7 @@ Requires:	java-devel
 
 Requires:  mvn(oro:oro)
 Requires:  mvn(org.freemarker:freemarker)
-Requires:  mvn(bsh:bsh)
+Requires:  mvn(org.beanshell:bsh)
 Requires:  mvn(xml-resolver:xml-resolver)
 Requires:  mvn(xml-apis:xml-apis) 
 
